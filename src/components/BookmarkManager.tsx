@@ -13,9 +13,11 @@ interface Bookmark {
     user_id: string;
 }
 
+import { User } from "@supabase/supabase-js";
+
 interface BookmarkManagerProps {
     initialBookmarks: Bookmark[];
-    user: any;
+    user: User;
 }
 
 export default function BookmarkManager({
