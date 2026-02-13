@@ -1,44 +1,73 @@
-# Smart Bookmark App
+**Smart Bookmark App**
+======================
 
-A modern, real-time bookmark manager built with Next.js, Supabase, and Tailwind CSS.
+**Overview**
+------------
 
-## Features
+A modern, full-stack bookmark manager designed for speed, security, and simplicity. Built with the T3-inspired stack (Next.js App Router, Supabase, Tailwind CSS, TypeScript), this application provides a robust solution for managing your personal links with real-time synchronization across devices.
 
-- **Google OAuth Login**: Secure sign-in with your Google account.
-- **Private Bookmarks**: Your bookmarks are only visible to you.
-- **Real-time Updates**: Add a bookmark in one tab, see it instantly in another.
-- **Responsive Design**: Beautiful, glassmorphic UI that works on all devices.
-- **Delete Functionality**: Easily remove unwanted bookmarks.
+The core philosophy is simple: **One secure place for all your bookmarks, instantly accessible everywhere.**
 
-## Tech Stack
+**Features**
+------------
 
-- **Framework**: Next.js 15 (App Router)
-- **Backend/Database**: Supabase (PostgreSQL, Auth, Realtime)
-- **Styling**: Tailwind CSS
-- **Language**: TypeScript
+- **Secure Authentication**: powered by Supabase Auth with Google OAuth integration. Supports secure sessions and automatic token refreshing.
+- **Real-time Synchronization**: Leveraging Supabase Realtime, any bookmark added or removed updates instantly across all open tabs and devices without a page refresh.
+- **Privacy First**: Implements Row Level Security (RLS) policies at the database level. User data is strictly isolated—User A can never access User B's bookmarks.
+- **Modern UI/UX**:
+    - Responsive design using **Tailwind CSS**.
+    - Smooth, fluid interactions powered by **Framer Motion**.
+    - Glassmorphic aesthetic with a polished dark mode interface.
+- **Type Safety**: End-to-end type safety with **TypeScript** and generated database types.
 
-## Setup Instructions
+**Tech Stack**
+--------------
 
-### 1. Create a Supabase Project
+- **Frontend**: Next.js 15 (App Router), React 19, TypeScript
+- **Styling**: Tailwind CSS v4, Framer Motion (for animations)
+- **Backend**: Supabase (PostgreSQL, Authentication, Realtime)
+- **Deployment**: Vercel
 
-1. Go to [Supabase](https://supabase.com/) and create a new project.
-2. Go to **Project Settings > API** and copy the `Project URL` and `anon public` key.
+**Getting Started**
+-------------------
 
-### 2. Configure Environment Variables
+**Prerequisites**
+-----------------
 
-Create a `.env.local` file in the root of the project:
+- Node.js 18+
+- npm or yarn
+- A Supabase account
 
-```bash
-NEXT_PUBLIC_SUPABASE_URL=your_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
-```
+**Installation**
+----------------
 
-### 3. Setup Database & Policies
+1.  **Clone the repository:**
+    git clone https://github.com/MOHAN-MOORTHI/smart-bookmark-app.git
+    cd smart-bookmark-app
 
-Go to the **SQL Editor** in your Supabase dashboard and run the following script to set up the database schema and security policies:
+2.  **Install dependencies:**
+    npm install
+
+3.  **Environment Setup:**
+    Create a .env.local file in the root directory:
+    NEXT_PUBLIC_SUPABASE_URL=your_project_url
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+
+4.  **Database Migration:**
+    Run the SQL script (provided below) in your Supabase SQL Editor to set up the schema and security policies.
+
+5.  **Run Development Server:**
+    npm run dev
+
+    Open http://localhost:3000 to view it in the browser.
+
+**Database Schema & Policies**
+------------------------------
+
+Run this SQL in your Supabase Dashboard to initialize the backend:
 
 ```sql
--- Create the bookmarks table
+-- 1. Create the bookmarks table
 create table bookmarks (
   id uuid default gen_random_uuid() primary key,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null,
@@ -47,58 +76,40 @@ create table bookmarks (
   user_id uuid default auth.uid() references auth.users
 );
 
--- Enable Row Level Security (RLS)
+-- 2. Enable Row Level Security (RLS)
 alter table bookmarks enable row level security;
 
--- Policy: Users can view their own bookmarks
+-- 3. Create Security Policies
+-- Policy: Users can view ONLY their own bookmarks
 create policy "Users can view their own bookmarks"
 on bookmarks for select
 using (auth.uid() = user_id);
 
--- Policy: Users can insert their own bookmarks
+-- Policy: Users can insert ONLY their own bookmarks
 create policy "Users can insert their own bookmarks"
 on bookmarks for insert
 with check (auth.uid() = user_id);
 
--- Policy: Users can delete their own bookmarks
+-- Policy: Users can delete ONLY their own bookmarks
 create policy "Users can delete their own bookmarks"
 on bookmarks for delete
 using (auth.uid() = user_id);
 
--- Enable Realtime for the bookmarks table
+-- 4. Enable Realtime
 alter publication supabase_realtime add table bookmarks;
 ```
 
-### 4. Configure Google Auth
+**Google Auth Setup**
+---------------------
 
-1. Go to **Authentication > Providers** in Supabase.
-2. Enable **Google**.
-3. You will need to set up a Google Cloud Project to get the `Client ID` and `Client Secret`.
-   - Authorized Redirect URI should be: `https://<your-project>.supabase.co/auth/v1/callback`
-4. Add the Client ID and Secret to Supabase.
+1.  Go to Supabase Dashboard -> **Authentication** -> **Providers**.
+2.  Enable **Google**.
+3.  Configure your Google Cloud Project credentials (Client ID / Secret).
+4.  Ensure your **Redirect URL** matches your deployment (e.g., https://your-app.vercel.app/auth/callback).
 
-### 5. Run Locally
+**Deployment**
+--------------
 
-```bash
-npm install
-npm run dev
-```
+Changes pushed to the main branch are automatically deployed to Vercel.
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-## Deployment
-
-### Deploy to Vercel
-
-1. Push this code to a GitHub repository.
-2. Go to [Vercel](https://vercel.com) and import the project.
-3. Add the `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to the Vercel Environment Variables.
-4. Deploy!
-
-### Vercel URL Configuration
-
-In Supabase Authentication > URL Configuration:
-- Set **Site URL** to your Vercel deployment URL (e.g., `https://smart-bookmarks.vercel.app`).
-- Add `https://smart-bookmarks.vercel.app/auth/callback` to **Redirect URLs**.
-
-For local development, ensure `http://localhost:3000` is in the Redirect URLs.
+**Live URL**: https://smart-bookmark-app-sooty.vercel.app
