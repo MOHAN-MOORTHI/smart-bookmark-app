@@ -107,14 +107,6 @@ alter publication supabase_realtime add table bookmarks;
 3.  Configure your Google Cloud Project credentials (Client ID / Secret).
 4.  Ensure your **Redirect URL** matches your deployment (e.g., https://your-app.vercel.app/auth/callback).
 
-**GitHub Auth Setup**
----------------------
-
-1.  Go to Supabase Dashboard -> **Authentication** -> **Providers**.
-2.  Enable **GitHub**.
-3.  Configure your GitHub OAuth App credentials (Client ID / Secret).
-4.  Ensure your **Redirect URL** matches your deployment (e.g., https://your-app.vercel.app/auth/callback).
-
 **Deployment**
 --------------
 
