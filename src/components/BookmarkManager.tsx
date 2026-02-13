@@ -71,6 +71,14 @@ export default function BookmarkManager({
         e.preventDefault();
         if (!newUrl || !newTitle) return;
 
+        // Basic URL validation
+        try {
+            new URL(newUrl);
+        } catch {
+            alert("Please enter a valid URL (e.g., https://example.com)");
+            return;
+        }
+
         setLoading(true);
         const { error } = await supabase.from("bookmarks").insert({
             title: newTitle,
