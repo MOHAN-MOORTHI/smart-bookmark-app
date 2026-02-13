@@ -2,7 +2,18 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import BookmarkManager from "@/components/BookmarkManager";
 
-export default async function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const { code, next } = await searchParams;
+
+  if (code && typeof code === "string") {
+    const nextPath = typeof next === "string" ? next : "/";
+    redirect(`/auth/callback?code=${code}&next=${encodeURIComponent(nextPath)}`);
+  }
+
   const supabase = await createClient();
 
   const {

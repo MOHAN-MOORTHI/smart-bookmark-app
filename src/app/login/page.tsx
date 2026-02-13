@@ -1,9 +1,30 @@
 "use client";
 
-import LoginButton from "@/components/LoginButton";
+import OAuthButton from "@/components/OAuthButton";
 import { motion } from "framer-motion";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, Suspense } from "react";
 
-export default function LoginPage() {
+function LoginContent() {
+    const searchParams = useSearchParams();
+    const router = useRouter();
+    const code = searchParams.get("code");
+    const next = searchParams.get("next") ?? "/";
+
+    useEffect(() => {
+        if (code) {
+            router.push(`/auth/callback?code=${code}&next=${encodeURIComponent(next)}`);
+        }
+    }, [code, next, router]);
+
+    if (code) {
+        return (
+            <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+                <div className="text-white text-xl font-light tracking-widest animate-pulse">Authenticating...</div>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-gray-950 flex items-center justify-center p-4 overflow-hidden relative selection:bg-blue-500/30">
             {/* Background gradients */}
@@ -72,9 +93,10 @@ export default function LoginPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.8 }}
-                    className="flex justify-center pt-2"
+                    className="flex flex-col gap-4 pt-2"
                 >
-                    <LoginButton />
+                    <OAuthButton provider="google" />
+                    <OAuthButton provider="github" />
                 </motion.div>
 
                 <motion.p
@@ -87,5 +109,17 @@ export default function LoginPage() {
                 </motion.p>
             </motion.div>
         </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+                <div className="w-12 h-12 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+            </div>
+        }>
+            <LoginContent />
+        </Suspense>
     );
 }
