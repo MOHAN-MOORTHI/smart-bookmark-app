@@ -11,7 +11,7 @@ The core philosophy is simple: **One secure place for all your bookmarks, instan
 **Features**
 ------------
 
-- **Secure Authentication**: powered by Supabase Auth with Google and GitHub OAuth integration. Supports secure sessions and automatic token refreshing.
+- **Secure Authentication**: powered by Supabase Auth with Google OAuth integration. Supports secure sessions and automatic token refreshing.
 - **Real-time Synchronization**: Leveraging Supabase Realtime, any bookmark added or removed updates instantly across all open tabs and devices without a page refresh.
 - **Privacy First**: Implements Row Level Security (RLS) policies at the database level. User data is strictly isolated—User A can never access User B's bookmarks.
 - **Modern UI/UX**:
