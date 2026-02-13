@@ -96,7 +96,6 @@ function LoginContent() {
                     className="flex flex-col gap-4 pt-2"
                 >
                     <OAuthButton provider="google" />
-                    <OAuthButton provider="github" />
                 </motion.div>
 
                 <motion.p
