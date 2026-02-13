@@ -50,14 +50,26 @@ export default function BookmarkItem({ bookmark }: BookmarkItemProps) {
                 <div className="group relative bg-gray-900/50 border border-gray-800 hover:border-blue-500/50 rounded-xl p-5 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 backdrop-blur-sm h-full flex flex-col justify-between">
                     <div className="flex justify-between items-start">
                         <div className="flex-1 min-w-0 pr-4">
-                            <h3 className="text-lg font-semibold text-white truncate group-hover:text-blue-400 transition-colors">
-                                {bookmark.title}
-                            </h3>
+                            <div className="flex items-center space-x-3 mb-2">
+                                <div className="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center overflow-hidden flex-shrink-0 border border-white/5">
+                                    <img
+                                        src={`https://www.google.com/s2/favicons?domain=${new URL(bookmark.url).hostname}&sz=64`}
+                                        alt=""
+                                        className="w-5 h-5"
+                                        onError={(e) => {
+                                            (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.172 13.828a4 4 0 015.656 0l4-4a4 4 0 115.656 5.656l-1.101 1.101" /></svg>';
+                                        }}
+                                    />
+                                </div>
+                                <h3 className="text-lg font-semibold text-white truncate group-hover:text-blue-400 transition-colors">
+                                    {bookmark.title}
+                                </h3>
+                            </div>
                             <a
                                 href={bookmark.url}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-sm text-gray-500 hover:text-gray-300 truncate block mt-1 transition-colors"
+                                className="text-sm text-gray-500 hover:text-gray-300 truncate block transition-colors"
                             >
                                 {bookmark.url}
                             </a>

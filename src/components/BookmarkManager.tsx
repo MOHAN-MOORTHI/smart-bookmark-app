@@ -29,6 +29,7 @@ export default function BookmarkManager({
     );
     const [newUrl, setNewUrl] = useState("");
     const [newTitle, setNewTitle] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
     const [loading, setLoading] = useState(false);
     const [supabase] = useState(() => createClient());
 
@@ -86,6 +87,12 @@ export default function BookmarkManager({
         }
         setLoading(false);
     };
+
+    const filteredBookmarks = bookmarks.filter(
+        (bookmark) =>
+            bookmark.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            bookmark.url.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     return (
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -199,39 +206,52 @@ export default function BookmarkManager({
                 </form>
             </motion.div>
 
+            {/* Search Bar */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
+                className="mb-8 relative"
+            >
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <svg
+                        className="h-5 w-5 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                        />
+                    </svg>
+                </div>
+                <input
+                    type="text"
+                    placeholder="Search bookmarks by title or URL..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full pl-12 pr-4 py-3 bg-gray-900/30 border border-gray-800 rounded-2xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 text-white placeholder-gray-500 transition-all outline-none"
+                />
+            </motion.div>
+
             {/* Bookmark List */}
             <motion.div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-20">
                 <AnimatePresence mode="popLayout" initial={false}>
-                    {bookmarks.map((bookmark) => (
+                    {filteredBookmarks.map((bookmark) => (
                         <BookmarkItem key={bookmark.id} bookmark={bookmark} />
                     ))}
                 </AnimatePresence>
-                {bookmarks.length === 0 && (
+                {filteredBookmarks.length === 0 && (
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="col-span-full py-32 text-center text-gray-500 bg-gray-900/20 rounded-3xl border border-gray-800/50 border-dashed"
+                        className="col-span-full py-20 text-center text-gray-500 bg-gray-900/10 rounded-3xl border border-gray-800/30 border-dashed"
                     >
-                        <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-gray-800/50 flex items-center justify-center">
-                            <svg
-                                className="w-10 h-10 text-gray-600"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="1.5"
-                                    d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"
-                                ></path>
-                            </svg>
-                        </div>
-                        <p className="text-2xl font-semibold text-gray-400">
-                            No bookmarks yet
-                        </p>
-                        <p className="text-gray-500 mt-2">
-                            Add your first bookmark above to get started.
+                        <p className="text-xl font-medium text-gray-500">
+                            {searchQuery ? "No bookmarks match your search" : "No bookmarks yet"}
                         </p>
                     </motion.div>
                 )}
