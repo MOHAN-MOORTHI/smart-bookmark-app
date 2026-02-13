@@ -63,7 +63,7 @@ export default function LoginPage() {
                             transition={{ delay: 0.6 }}
                             className="text-gray-400 text-lg font-light leading-relaxed"
                         >
-                            Your personal, synchronized collection in a beautiful 3D space.
+                            Your personal, synchronized bookmark collection.
                         </motion.p>
                     </div>
                 </div>
