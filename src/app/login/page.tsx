@@ -96,15 +96,6 @@ function LoginContent() {
                     className="flex flex-col gap-4 pt-2"
                 >
                     <OAuthButton provider="google" />
-                    <div className="relative my-2">
-                        <div className="absolute inset-0 flex items-center">
-                            <span className="w-full border-t border-white/5"></span>
-                        </div>
-                        <div className="relative flex justify-center text-xs uppercase">
-                            <span className="bg-[#0a0a0a] px-2 text-gray-500 font-medium tracking-widest">or</span>
-                        </div>
-                    </div>
-                    <OAuthButton provider="github" />
                 </motion.div>
 
                 <motion.p
