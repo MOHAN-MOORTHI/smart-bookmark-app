@@ -1,6 +1,13 @@
 **Smart Bookmark App**
 ======================
 
+
+**Development Challenges & Solutions**
+-------------------------------------
+
+I faced issues with Supabase authentication setup (Google OAuth configuration and redirect URLs), realtime subscriptions not triggering across tabs, and row-level security blocking database actions. I solved them by correctly configuring OAuth credentials and redirect URLs, enabling realtime on the bookmarks table, setting up proper channel subscriptions, and writing accurate RLS policies to ensure users could only access their own bookmarks.
+
+
 **Overview**
 ------------
 
@@ -11,7 +18,7 @@ The core philosophy is simple: **One secure place for all your bookmarks, instan
 **Features**
 ------------
 
-- **Secure Authentication**: powered by Supabase Auth with Google OAuth integration. Supports secure sessions and automatic token refreshing.
+- **Secure Authentication**: powered by Supabase Auth with Google and GitHub OAuth integration. Supports secure sessions and automatic token refreshing.
 - **Real-time Synchronization**: Leveraging Supabase Realtime, any bookmark added or removed updates instantly across all open tabs and devices without a page refresh.
 - **Privacy First**: Implements Row Level Security (RLS) policies at the database level. User data is strictly isolated—User A can never access User B's bookmarks.
 - **Modern UI/UX**:
@@ -99,12 +106,12 @@ using (auth.uid() = user_id);
 alter publication supabase_realtime add table bookmarks;
 ```
 
-**Google Auth Setup**
+**Auth Setup**
 ---------------------
 
 1.  Go to Supabase Dashboard -> **Authentication** -> **Providers**.
-2.  Enable **Google**.
-3.  Configure your Google Cloud Project credentials (Client ID / Secret).
+2.  Enable **Google** and/or **GitHub**.
+3.  Configure your credentials (Client ID / Secret) from Google Cloud Console and GitHub Developer Settings.
 4.  Ensure your **Redirect URL** matches your deployment (e.g., https://your-app.vercel.app/auth/callback).
 
 **Deployment**
